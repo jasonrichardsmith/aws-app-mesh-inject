@@ -18,7 +18,7 @@ dep:
 test: dep
 	go test ./...
 
-goveralls:
+goveralls: dep
 	go test -coverprofile=coverage.out ./...
 	${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
