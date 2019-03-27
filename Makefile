@@ -10,8 +10,12 @@ IMAGE_ACCOUNT=${shell aws sts get-caller-identity --query "Account" --output tex
 #
 # Test
 #
-.PHONY: test goveralls
-test:
+.PHONY: dep test goveralls
+dep: 
+	$(eval export GO111MODULE=on)
+	go mod download
+
+test: dep
 	go test ./...
 
 goveralls:
