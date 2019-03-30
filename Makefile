@@ -45,6 +45,10 @@ buildhash: | hashtag build
 
 pushhash: | hashtag push
 
+ci-test-build:
+	go test ./...
+	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o appmeshinject ./cmd/app-mesh-inject/*.go
+
 #
 # Appmesh inject deployment
 #
@@ -67,6 +71,9 @@ deploy:
 
 clean:
 	kubectl delete namespace appmesh-inject
+	kubectl delete mutatingwebhookconfiguration aws-app-mesh-inject
+	kubectl delete clusterrolebindings aws-app-mesh-inject-binding
+	kubectl delete clusterrole aws-app-mesh-inject-cr;
 	rm -rf ./_output
 
 #

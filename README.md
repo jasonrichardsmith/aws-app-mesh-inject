@@ -1,7 +1,8 @@
 # App Mesh Inject
 
-The AWS App Mesh Kubernetes sidecar injecting Admission Controller.
+[![Build Status](https://travis-ci.org/aws/aws-app-mesh-inject.svg?branch=master)](https://travis-ci.org/aws/aws-app-mesh-inject)
 
+The AWS App Mesh Kubernetes sidecar injecting Admission Controller.
 
 ## Prerequisites
 * [openssl](https://www.openssl.org/source/)
@@ -37,7 +38,8 @@ curl https://raw.githubusercontent.com/aws/aws-app-mesh-inject/master/hack/insta
 
 To cleanup you can run
 ```
-$ kubectl delete namespace appmesh-inject
+kubectl delete namespace appmesh-inject; kubectl delete mutatingwebhookconfiguration aws-app-mesh-inject; 
+kubectl delete clusterrolebindings aws-app-mesh-inject-binding; kubectl delete clusterrole aws-app-mesh-inject-cr;
 ```
 
 ## Running the Demo
@@ -151,12 +153,15 @@ The name of the controller that creates the pod will be used as virtual node nam
 is created by a deployment, the virtual node name will be `<deployment name>-<namespace>`. 
 To override, add `appmesh.k8s.aws/virtualNode: <virtual node name>` annotation to the pod spec. 
 
+The mesh name provided at install time can be overridden with the `appmesh.k8s.aws/mesh: <mesh name>` annotation.
+
 For example:
 ```yaml
 kind: Deployment
 spec:
     metadata:
       annotations:
+        appmesh.k8s.aws/mesh: my-mesh
         appmesh.k8s.aws/ports: "8079,8080"
         appmesh.k8s.aws/virtualNode: my-app
         appmesh.k8s.aws/sidecarInjectorWebhook: disabled
