@@ -1,11 +1,11 @@
 SHELL=/bin/bash -eo pipefail
 .DEFAULT_GOAL := build
-IMAGE_REGION=test
+IMAGE_REGION=${shell aws configure get region}
 REPO=${IMAGE_ACCOUNT}.dkr.ecr.${IMAGE_REGION}.amazonaws.com/amazon/aws-app-mesh-inject
 VERSION=$(shell cat VERSION)
 HASH=$(shell git log --pretty=format:'%H' -n 1)
 IMAGE_TAG=${VERSION}
-IMAGE_ACCOUNT=test
+IMAGE_ACCOUNT=${shell aws sts get-caller-identity --query "Account" --output text}
 
 #
 # Test
@@ -45,14 +45,20 @@ buildhash: | hashtag build
 
 pushhash: | hashtag push
 
+buildmk8shash: | hashtag mk8srepo build
+
+pushmk8shash: | hashtag mk8srepo
+	docker push ${REPO}:${IMAGE_TAG}
+
+mk8srepo:
+	$(eval export REPO=localhost:32000/aws-app-mesh-inject)
+
 ci-test-build:
 	go test ./...
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o appmeshinject ./cmd/app-mesh-inject/*.go
 
-travis-e2e:
+travis-e2e: | buildmk8shash pushmk8shash
 	sudo microk8s.start
-	kubectl get pods --all-namespaces
-	$(MAKE) buildhash
 	$(MAKE) deploydevhash
 #
 # Appmesh inject deployment
@@ -66,6 +72,8 @@ deploydev:
 	./hack/deployInjector.sh
 
 deploydevhash: | hashtag deploydev
+
+deployk8sdevhash: | mk8srepo hashtag deploydev
 
 # Uses the official image from EKS account.
 deploy:

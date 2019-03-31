@@ -17,8 +17,10 @@ env:
 before_install:
   - go get github.com/mattn/goveralls
   - export GO111MODULE=on
+  - export MESH_REGION=test
+  - export MESH_NAME=test
   - sudo snap alias microk8s.kubectl kubectl
-  - export DOCKER_HOST=unix:///var/snap/microk8s/current/docker.sock
+  - sudo microk8s.start
 script: 
   - "make $TEST_SUITE"
 after_success:
