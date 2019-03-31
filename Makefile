@@ -51,9 +51,11 @@ ci-test-build:
 
 travis-e2e:
 	sudo microk8s.start
-	microk8s.kubectl get pods --all-namespaces
+	kubectl get pods --all-namespaces
 	$(eval export DOCKER_HOST=unix:///var/snap/microk8s/current/docker.sock)
+	$(eval export REPO=test)
 	$(MAKE) buildhash
+	$(MAKE) deploydevhash
 #
 # Appmesh inject deployment
 #

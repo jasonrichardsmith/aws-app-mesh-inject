@@ -17,6 +17,7 @@ env:
 before_install:
   - go get github.com/mattn/goveralls
   - export GO111MODULE=on
+  - snap alias microk8s.kubectl kubectl
 script: 
   - "make $TEST_SUITE"
 after_success:
