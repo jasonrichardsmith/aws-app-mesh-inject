@@ -51,7 +51,7 @@ ci-test-build:
 
 travis-e2e:
 	sudo microk8s.start
-	alias kubectl="microk8s.kubectl" && kubectl get pods --all-namespaces
+	kubectl get pods --all-namespaces
 	$(eval export DOCKER_HOST=unix:///var/snap/microk8s/current/docker.sock)
 	$(MAKE) buildhash
 	$(MAKE) deploydevhash
