@@ -1,5 +1,10 @@
 language: go
 go: 1.12.x
+dist: xenial
+addons:
+  snaps:
+    - name: microk8s
+      classic: true
 sudo: true
 services:
 - docker
@@ -14,7 +19,6 @@ before_install:
   - curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
   - curl -LO "https://github.com/rancher/k3s/releases/download/v0.3.0/k3s-arm64"
   - sudo mv ./kubectl /usr/local/bin/kubectl && sudo chmod +x /usr/local/bin/kubectl
-  - sudo snap install microk8s --classic
   - sudo microk8s.start
   - microk8s.kubectl get pods --all-namespaces
   - export GO111MODULE=on
