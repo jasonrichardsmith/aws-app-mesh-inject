@@ -56,7 +56,8 @@ ci-test-build:
 	go test ./...
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o appmeshinject ./cmd/app-mesh-inject/*.go
 
-travis-e2e: | buildpushmk8shash
+travis-e2e: | buildpushmk8shash deploymk8sdevhash
+	kubectl get pods --all-namespaces
 
 #
 # Appmesh inject deployment
@@ -71,7 +72,7 @@ deploydev:
 
 deploydevhash: | hashtag deploydev
 
-deployk8sdevhash: | mk8srepo hashtag deploydev
+deploymk8sdevhash: | mk8srepo hashtag deploydev
 
 # Uses the official image from EKS account.
 deploy:
