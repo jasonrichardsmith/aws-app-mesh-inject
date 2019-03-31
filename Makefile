@@ -58,7 +58,6 @@ ci-test-build:
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o appmeshinject ./cmd/app-mesh-inject/*.go
 
 travis-e2e: | buildmk8shash pushmk8shash
-	sudo microk8s.start
 	$(MAKE) deploydevhash
 #
 # Appmesh inject deployment
