@@ -7,8 +7,16 @@ install: true
 notifications:
   email: false
 env:
-  - GO111MODULE=on
+  - TEST_SUITE=ci-test-build
+  - TEST_SUITE=travis-e2e
+before_install:
+  - go get github.com/mattn/goveralls
+  - curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+  - curl -LO "https://github.com/rancher/k3s/releases/download/v0.3.0/k3s-arm64"
+  - mkdir -p .bin; mv ./kubectl .bin/kubectl && chmod +x .bin/kubectl && mv k3s-arm64 .bin/k3s && chmod +x .bin/k3s
+  - export PATH="$TRAVIS_BUILD_DIR/.bin:$PATH"
+  - export GO111MODULE=on
 script: 
-  - make ci-test-build
+  - "make $TEST_SUITE"
 after_success:
   - test -n "$TRAVIS_TAG" && make build && make push
