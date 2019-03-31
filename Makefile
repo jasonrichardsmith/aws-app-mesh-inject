@@ -50,8 +50,8 @@ ci-test-build:
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o appmeshinject ./cmd/app-mesh-inject/*.go
 
 travis-e2e:
-	sudo k3s server
-	export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && kubectl get pods --all-namespaces
+	sudo microk8s.start
+	microk8s.kubectl get pods --all-namespaces
 
 #
 # Appmesh inject deployment
