@@ -1,6 +1,6 @@
 SHELL=/bin/bash -eo pipefail
 .DEFAULT_GOAL := build
-IMAGE_REGION=${shell aws configure get region}
+IMAGE_REGION=test
 REPO=${IMAGE_ACCOUNT}.dkr.ecr.${IMAGE_REGION}.amazonaws.com/amazon/aws-app-mesh-inject
 VERSION=$(shell cat VERSION)
 HASH=$(shell git log --pretty=format:'%H' -n 1)
