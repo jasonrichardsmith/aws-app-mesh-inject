@@ -13,8 +13,8 @@ before_install:
   - go get github.com/mattn/goveralls
   - curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
   - curl -LO "https://github.com/rancher/k3s/releases/download/v0.3.0/k3s-arm64"
-  - mkdir -p .bin; mv ./kubectl .bin/kubectl && chmod +x .bin/kubectl && mv k3s-arm64 .bin/k3s && chmod +x .bin/k3s
-  - export PATH="$TRAVIS_BUILD_DIR/.bin:$PATH"
+  - sudo mv ./kubectl /usr/local/bin/kubectl && sudo chmod +x /usr/local/bin/kubectl
+  - sudo mv ./k3s-arm64 /usr/local/bin/k3s && sudo chmod +x /usr/local/bin/k3s
   - export GO111MODULE=on
 script: 
   - "make $TEST_SUITE"
