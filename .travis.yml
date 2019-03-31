@@ -5,6 +5,7 @@ addons:
   snaps:
     - name: microk8s
       classic: true
+      channel: 1.13/stable
 sudo: true
 services:
 - docker

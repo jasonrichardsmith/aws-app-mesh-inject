@@ -45,10 +45,9 @@ buildhash: | hashtag build
 
 pushhash: | hashtag push
 
-buildmk8shash: | hashtag mk8srepo build
-
-pushmk8shash: | hashtag mk8srepo
-	docker push ${REPO}:${IMAGE_TAG}
+buildpushmk8shash: | hashtag mk8srepo
+	sudo microk8s.docker build --no-cache -t ${REPO}:${IMAGE_TAG} .
+	sudo microk8s.docker push ${REPO}:${IMAGE_TAG}
 
 mk8srepo:
 	$(eval export REPO=localhost:32000/aws-app-mesh-inject)
@@ -57,8 +56,8 @@ ci-test-build:
 	go test ./...
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o appmeshinject ./cmd/app-mesh-inject/*.go
 
-travis-e2e: | buildmk8shash pushmk8shash
-	$(MAKE) deploydevhash
+travis-e2e: | buildpushmk8shash
+
 #
 # Appmesh inject deployment
 #
