@@ -5,7 +5,7 @@ REPO=${IMAGE_ACCOUNT}.dkr.ecr.${IMAGE_REGION}.amazonaws.com/amazon/aws-app-mesh-
 VERSION=$(shell cat VERSION)
 HASH=$(shell git log --pretty=format:'%H' -n 1)
 IMAGE_TAG=${VERSION}
-IMAGE_ACCOUNT=${shell aws sts get-caller-identity --query "Account" --output text}
+IMAGE_ACCOUNT=test
 
 #
 # Test
@@ -52,8 +52,6 @@ ci-test-build:
 travis-e2e:
 	sudo microk8s.start
 	kubectl get pods --all-namespaces
-	$(eval export DOCKER_HOST=unix:///var/snap/microk8s/current/docker.sock)
-	$(eval export REPO=test)
 	$(MAKE) buildhash
 	$(MAKE) deploydevhash
 #
